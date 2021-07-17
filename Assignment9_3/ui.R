@@ -1,5 +1,4 @@
 # This is the user-interface definition of a Shiny web application.
-
 library(shiny)
 library(intrval)
 library(shinythemes)
@@ -29,11 +28,20 @@ shinyUI(fluidPage(
             My_RadioButton("radioAircon", "Has central air conditioning"),
             My_RadioButton("radioPrefer", "Located in preferred neighborhood of the city"),
             ),
-        # Main panel items
-        mainPanel(
+        
+        mainPanel(                       # Main panel items
             tabsetPanel(type = "tabs",
-                        tabPanel("Description"),
+                        tabPanel("Description", 
+                                 h4("This app is based on HousePrices dataset from AER package. Data represent sales 
+                                    prices of houses sold in the city of Windsor, Canada, during July, August and September, 1987."),
+                                 h3("How to use App"),
+                                 h4("Move the sliders and RadioButtons to find house of your dreams for the best price!"), 
+                                 h4("Points on scatterplot represent houses from dataset with specified parameter ranges. Use checkboxes under the plot 
+                                    to display actual house prices and difference between actual and predicted prices")
+                                 ),
                         tabPanel("Data visualization", plotOutput("distPlot"),
+                                 checkboxInput("checkShowPrice", "Show price label"),
+                                 checkboxInput("checkShowDiffer", "Show difference between actual and predicted price"),
                                  ),
                         tabPanel("Linear model", verbatimTextOutput("Linear_Model"))))
     )

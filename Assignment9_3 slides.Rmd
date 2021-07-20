@@ -13,23 +13,20 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ## House Prices App Description 
 
-**House Prices** app is based on, [HousePrices](https://www.rdocumentation.org/packages/AER/versions/1.2-9/topics/HousePrices) dataset from AER R package. Data represent sales prices of houses sold in the city of Windsor, Canada, during July, August and September, 1987.  
-Here is what the original dataset looks like
-```{r, echo=T,, warning=F, message=F, comment=NA, render=T}
-library(AER)
-data("HousePrices")
-head(HousePrices,3)
-```
+**House Prices** app is based on [HousePrices](https://www.rdocumentation.org/packages/AER/versions/1.2-9/topics/HousePrices) dataset from AER R package. Data represent sales prices of houses sold in the city of Windsor, Canada, during July, August and September, 1987.     
 
-Goal of this app is to help user find suitable house from dataset with multiple variables. All data points are displayed on price-lotsize plot. App prediction algorithm, based on simple linear model helps in house price estimation. Dot color indicates if house is overestimated (red) or underestimated (blue). There is also ability to display price and actual-predicted price difference on the plot (it's better to use this when just few data points remained). 
+Goal of this app is to help user find suitable house from dataset with multiple variables. User should specify desired house parameters, using Sliders and RadioButtons on App Sidebar, all data points in selected range are displayed on price-lotsize plot.  
+App prediction algorithm, based on simple linear model helps in house price estimation. Dot color indicates if house is overestimated (red) or underestimated (blue). There is also ability to display price value and actual-predicted price difference on the plot (it's better to use this tool when just few data points remained). 
 
 Also algorithm produces two prediction lines - for minimum and maximum parameters from selected ranges.
-If there is no houses with specified parameters, lines should help to estimate predicted price.
+If there are no houses with specified parameters, lines should help to estimate predicted price.
 
-## House Prices App User Interface 
+![House Prices App Interface](AppInterface.png)
+
+## House Prices App User Interface
 
 ```{r, message=F, warning=F, echo=T, eval=F, class.source="bg-success"}
-#This code chunk just demonstrates UI code, so eval=FALSE
+# This is the user-interface definition of a Shiny App (file ui.R)
 library(shiny)
 library(shinythemes)
 
@@ -94,13 +91,12 @@ shinyUI(fluidPage(
                                  verbatimTextOutput("Linear_Model"))))
     )
 ))
-
 ```
 
-## House Prices App Server Logic
+## House Prices App Server Logic 
 
 ```{r, message=F, warning=F, echo=T}
-# Server logic of a Shiny web application
+# Server logic of a Shiny web application (file server.R)
 library(shiny)
 library(AER)
 library(dplyr)
@@ -175,6 +171,9 @@ shinyServer(function(input, output) {          #Define server logic
     })
     output$Linear_Model<-renderPrint(summary(fit_line))  #Printing model summary 
 })
+
+
+
 ```
 
 ## Linear Model Summary
@@ -185,8 +184,12 @@ are positive, that makes finding min and max range prediction lines very straigh
 find set of all min-s and all max-es from variable ranges. App algorithm produces two parallel lines, which are 
 price-lotsize estimations for min and max sets of other model parameters in range of min and max lotsize from appropriate slidebar.
 When all the parameters are strictly defined, two lines collapses into single prediction line. 
-```{r, echo = TRUE}
+```{r, echo = T}
 summary(fit_line)
 ```
+All model coefficient p-values are significant, let's look at coefficient 95% confidence intervals:
 
+```{r, echo=T}
+confint(fit_line)
+```
 
